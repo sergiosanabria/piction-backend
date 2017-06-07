@@ -1,0 +1,125 @@
+{% extends '@EasyAdmin/default/layout.html.twig' %}
+
+{% block body_javascript %}
+
+  <script src="{{ asset('dist/highcharts/highcharts.js') }}"></script>
+
+  <script type="text/javascript">
+
+    $(document).ready(function() {
+      Highcharts.setOptions({
+        global: {
+          useUTC: false
+        }
+      });
+
+      Highcharts.chart('container', {
+        chart: {
+          type: 'spline',
+          animation: Highcharts.svg, // don't animate in old IE
+          marginRight: 10,
+          events: {
+            load: function() {
+
+              // set up the updating of the chart each second
+              var series = this.series[0];
+              setInterval(function() {
+                var x = (new Date()).getTime(), // current time
+                  y = Math.random();
+                series.addPoint([
+                  x, y
+                ], true, true);
+              }, 700);
+            }
+          }
+        },
+        credits: false,
+        title: {
+          text: 'Visitantes en vivo'
+        },
+        xAxis: {
+          type: 'datetime',
+          tickPixelInterval: 150
+        },
+        yAxis: {
+          title: {
+            text: 'Value'
+          },
+          plotLines: [
+            {
+              value: 0,
+              width: 1,
+              color: '#808080'
+            }
+          ]
+        },
+        tooltip: {
+          formatter: function() {
+            return '<b>' + this.series.name + '</b><br/>' + Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' + Highcharts.numberFormat(this.y, 2);
+          }
+        },
+        legend: {
+          enabled: false
+        },
+        exporting: {
+          enabled: false
+        },
+        series: [
+          {
+            name: 'Random data',
+            data: (function() {
+              // generate an array of random data
+              var data = [],
+                time = (new Date()).getTime(),
+                i;
+
+              for (i = -19; i <= 0; i += 1) {
+                data.push({
+                  x: time + i * 1000,
+                  y: Math.random()
+                });
+              }
+              return data;
+            }())
+          }
+        ]
+      });
+    });
+  </script>
+{% endblock body_javascript %}
+
+{% block content_title %}Estadísticas > Tiempo Real > Iguazú{% endblock %}
+
+{% block main %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="sel1">Categoría</label>
+          <select class="form-control" id="sel1">
+            <option>Todos</option>
+            <option>Estaciones de Servicio</option>
+            <option>Centro Turístico</option>
+            <option>Spa</option>
+            <option>Casino</option>
+            <option>Hoteles</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="sel1">Lugar:</label>
+          <select class="form-control" id="sel2">
+            <option>Todos</option>
+            <option>Parador Mocona Guazu</option>
+            <option>Saltos del Moconá</option>
+            <option>Saltos del Tabay</option>
+            <option>HA Urbano Posadas</option>
+          </select>
+        </div>
+      </div>
+      <div id="container"></div>
+    </div>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,90 @@
+easy_admin:
+    site_name: Piction
+    design:
+        brand_color: '#1E1E1E'
+        menu:
+            - { label: 'Marketing' }
+            - { label: 'Mis campañas', url: '#' , icon: 'shopping-bag'}
+            - { label: 'Clientes', url: '#' , icon: 'users'}
+            - { label: 'Reservas' }
+            - { label: 'Últimas Reservas', url: '#', icon: 'plane'}
+            - { label: 'Itinerarios' }
+            - { label: 'Listados', url: '#' , icon: 'map-o'}
+            - { label: 'Estadisticas' }
+            - { label: 'Generales', route: 'app_estadisticas' , icon: 'line-chart'}
+            - { label: 'Históricos', route: 'app_estadisticas_historicos' , icon: 'area-chart'}
+            - { label: 'Tiempo Real', route: 'app_estadisticas_tiempo_real' , icon: 'signal'}
+            - { label: 'App Externas' }
+            - { label: 'Conexión con Booking' , url: '#', icon: 'book'}
+            - { label: 'Conexión con Google' , url: '#', icon: 'google'}
+            - { label: 'Conexión con Facebook Events' , url: '#', icon: 'facebook-square'}
+            - { label: 'Conexión con Forsquare' , url: '#', icon: 'foursquare'}
+            - { label: 'Conexión con tripadvisor' , url: '#', icon: 'tripadvisor'}
+            - { label: 'ML Engine' }
+            - { label: 'Mejores lugares para invertir',url:'#' , icon: 'globe'}
+            - { label: 'Lugares que más se van a visitar',url:'#', icon: 'map-marker' }
+            - { label: '' }
+            # - Category
+            - { label: 'Administración' }
+            - Persona
+            - { label: 'Tags' , url: '#'}
+
+    entities:
+        Persona:
+            class: AppBundle\Entity\Persona
+            label: 'Personas'
+            list:
+                title: "Personas"
+            form:
+                fields:
+                    - { property: 'nombre' }
+                    - { property: 'apellido' }
+                    - { property: 'sexo', type: 'choice', type_options: {choices: {'Masculino':'M', 'Femenino':'F'}} }
+                    - { property: 'telefonoPrincipal' }
+                    - { property: 'telefonoSecundario' }
+                    - { property: 'cargo' }
+                    - { property: 'usuario', type: 'UsuarioBundle\Form\UsuarioType', type_options: { required: true } }
+                    - { property: 'activo' }
+
+#        Categoria:
+#            class: AppBundle\Entity\Categoria
+#            label: 'Categorías'
+#            list:
+#                title: "Categorías"
+#            form:
+#                fields: ['nombre', 'descripcion', 'icono' ,'categoriaPadre', 'activo']
+#        Lugar:
+#            class: AppBundle\Entity\Lugar
+#            label: 'Lugares'
+#            list:
+#                title: "Lugares"
+#                fields:
+#                   - { property: 'id' }
+#                   - { property: 'categoria' }
+#                   - { property: 'nombre' }
+#                   - { property: 'latitud' }
+#                   - { property: 'longitud' }
+#                   - { property: 'imageName', label: 'Img. Principal', type: 'image', base_path: '%app.path.lugar_image%' }
+#
+#            form:
+#                fields:
+#                   - { property: 'categoria' }
+#                   - { property: 'nombre' }
+#                   - { property: 'resumen' }
+#                   - { property: 'cuerpo' }
+#                   - { property: 'imageFile', type: 'vich_image' }
+#                   - { property: 'tipo' }
+#                   - { property: 'direccion' }
+#                   - { property: 'latitud' }
+#                   - { property: 'longitud' }
+#                   - { property: 'telefono' }
+#                   - { property: 'celular' }
+#                   - { property: 'email' }
+#                   - { property: 'facebook' }
+#                   - { property: 'twitter' }
+#                   - { property: 'instagram' }
+#                   - { property: 'youtube' }
+#                   - { property: 'fechaEventoInicio' }
+#                   - { property: 'fechaEventoFin' }
+#                   - { property: 'fechaVisibleDesde' }
+#                   - { property: 'fechaVisibleHasta' }

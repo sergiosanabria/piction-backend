@@ -1,0 +1,206 @@
+{% extends '@EasyAdmin/default/layout.html.twig' %}
+
+{% block body_javascript %}
+
+  <script src="{{ asset('dist/highcharts/highcharts.js') }}"></script>
+  <script src="{{ asset('dist/highcharts/highcharts-more.js') }}"></script>
+  <script src="{{ asset('dist/highcharts/modules/heatmap.js') }}"></script>
+  <script src="{{ asset('dist/highcharts/modules/treemap.js') }}"></script>
+  <script src="{{ asset('dist/highcharts/modules/solid-gauge.js') }}"></script>
+
+  <script type="text/javascript">
+
+    $(document).ready(function() {
+
+      $.getJSON('https://www.highcharts.com/samples/data/jsonp.php?filename=usdeur.json&callback=?', function (data) {
+
+    Highcharts.chart('container', {
+        chart: {
+            zoomType: 'x'
+        },
+        title: {
+            text: 'Tasa de visitantes en la provincia en el tiempo'
+        },
+        subtitle: {
+            text: document.ontouchstart === undefined ?
+                    'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+        },
+        xAxis: {
+            type: 'datetime'
+        },
+        yAxis: {
+            title: {
+                text: 'Tasa de visitas'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            area: {
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 0,
+                        x2: 0,
+                        y2: 1
+                    },
+                    stops: [
+                        [0, Highcharts.getOptions().colors[0]],
+                        [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                    ]
+                },
+                marker: {
+                    radius: 2
+                },
+                lineWidth: 1,
+                states: {
+                    hover: {
+                        lineWidth: 1
+                    }
+                },
+                threshold: null
+            }
+        },
+
+        credits: false,
+
+        series: [{
+            type: 'area',
+            name: 'visitas',
+            data: data
+        }]
+    });
+});
+
+Highcharts.chart('historico2', {
+
+  chart: {
+      type: 'bubble',
+      plotBorderWidth: 1,
+      zoomType: 'xy'
+  },
+
+  legend: {
+      enabled: false
+  },
+
+  title: {
+      text: 'Aceptación y frecuencia por lugar'
+  },
+
+  xAxis: {
+      gridLineWidth: 1,
+      title: {
+          text: 'Frecuencia (visitas)'
+      },
+      labels: {
+          format: '{value} mil'
+      },
+      plotLines: [{
+          color: 'black',
+          dashStyle: 'dot',
+          width: 2,
+          value: 65,
+          label: {
+              rotation: 0,
+              y: 15,
+              style: {
+                  fontStyle: 'italic'
+              },
+              text: 'Línea segura de visitas'
+          },
+          zIndex: 3
+      }]
+  },
+
+  credits: false,
+
+  yAxis: {
+      startOnTick: false,
+      endOnTick: false,
+      title: {
+          text: 'Aceptacion (%)'
+      },
+      labels: {
+          format: '{value} %'
+      },
+      maxPadding: 0.2,
+      plotLines: [{
+          color: 'black',
+          dashStyle: 'dot',
+          width: 2,
+          value: 50,
+          label: {
+              align: 'right',
+              style: {
+                  fontStyle: 'italic'
+              },
+              text: 'Linea segura de aceptación',
+              x: -10
+          },
+          zIndex: 3
+      }]
+  },
+
+  tooltip: {
+      useHTML: true,
+      headerFormat: '<table>',
+      pointFormat: '<tr><th colspan="2"><h3>{point.country}</h3></th></tr>' +
+          '<tr><th>Visitas:</th><td>{point.x} mil.</td></tr>' +
+          '<tr><th>Aceptación:</th><td>{point.y}%</td></tr>',
+      footerFormat: '</table>',
+      followPointer: true
+  },
+
+  plotOptions: {
+      series: {
+          dataLabels: {
+              enabled: true,
+              format: '{point.name}'
+          }
+      }
+  },
+
+  series: [{
+      data: [
+          { x: 95, y: 95, z: 13.8, name: 'IRI', country: 'Bernardo de Irigoyen' },
+          { x: 86.5, y: 102.9, z: 14.7, name: 'PR', country: 'Puerto Rico' },
+          { x: 80.8, y: 91.5, z: 15.8, name: 'SI', country: 'San Ignacio' },
+          { x: 80.4, y: 102.5, z: 12, name: 'ED', country: 'El Dorado' },
+          { x: 80.3, y: 86.1, z: 11.8, name: 'JA', country: 'Jardín América' },
+          { x: 78.4, y: 70.1, z: 16.6, name: 'WND', country: 'Wanda' },
+          { x: 74.2, y: 68.5, z: 14.5, name: 'OB', country: 'Oberá' },
+          { x: 73.5, y: 83.1, z: 10, name: 'SJ', country: 'San Javier' },
+          { x: 71, y: 93.2, z: 24.7, name: 'IGZ', country: 'Iguazú' },
+          { x: 68.6, y: 20, z: 16, name: 'MO', country: 'Montecarlo' },
+          { x: 65.5, y: 126.4, z: 35.3, name: 'POS', country: 'Posadas' },
+          { x: 65.4, y: 50.8, z: 28.5, name: 'LNA', country: 'Leandro N Alem' },
+          { x: 63.4, y: 51.8, z: 15.4, name: 'PT', country: 'Portugal' },
+          { x: 64, y: 82.9, z: 31.3, name: 'CO', country: 'Concepción' }
+      ]
+  }]
+
+});
+
+    });
+
+    </script>
+{% endblock body_javascript %}
+
+{% block content_title %}Estadísticas > Historicos{% endblock %}
+
+{% block main %}
+  <div class="row">
+    <div class="col-md-12">
+      <div id="container"></div>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 10px">
+    <div class="col-md-12">
+      <div id="historico2">
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

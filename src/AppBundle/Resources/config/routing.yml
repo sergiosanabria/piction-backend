@@ -1,0 +1,12 @@
+app_estadisticas:
+    path:     /estadisticas
+    defaults: { _controller: AppBundle:Default:estadisticas }
+
+
+app_estadisticas_historicos:
+    path:     /estadisticas_historicas
+    defaults: { _controller: AppBundle:Default:estadisticasHistoricos }
+
+app_estadisticas_tiempo_real:
+    path:     /estadisticas_tiempo_real
+    defaults: { _controller: AppBundle:Default:estadisticasTiempoReal }

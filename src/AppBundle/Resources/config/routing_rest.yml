@@ -1,0 +1,9 @@
+frase :
+  type: rest
+  resource:     "@AppBundle/Controller/Rest/FrasesRestController.php"
+  name_prefix:  api_
+
+usuario :
+  type: rest
+  resource:     "@AppBundle/Controller/Rest/UsuarioRestController.php"
+  name_prefix:  api_
