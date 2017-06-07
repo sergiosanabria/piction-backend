@@ -7,8 +7,7 @@ use AppBundle\Form\FraseType;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 
-class FrasesRestController extends FOSRestController
-{
+class FrasesRestController extends FOSRestController {
 //    public function getOndasAction(Request $request)
 //    {
 //        $criteria = array('activo' => true);
@@ -32,69 +31,67 @@ class FrasesRestController extends FOSRestController
 //        return $this->handleView($vista);
 //    }
 //
-    public function getFraseAction(Request $request, $id = 1)
-    {
+	public function getFraseAction( Request $request, $id = 1 ) {
 
-        if (isset($id)) {
+		if ( isset( $id ) ) {
 
-            $frase = $this->getDoctrine()->getRepository("AppBundle:Frase")->findOneBy(
-                array(
-                    'id' => $id,
-                    'activo' => true
-                )
-            );
+			$frase = $this->getDoctrine()->getRepository( "AppBundle:Frase" )->findOneBy(
+				array(
+					'id'     => $id,
+					'activo' => true
+				)
+			);
 
-        }
+		}
 
-        $vista = $this->view($frase,
-            200);
-        return $this->handleView($vista);
-    }
+		$vista = $this->view( $frase,
+			200 );
 
-    public function getFrasesAction(Request $request)
-    {
+		return $this->handleView( $vista );
+	}
 
-        $frases = $this->getDoctrine()->getRepository("AppBundle:Frase")->findBy(
-            array(
-                'activo' => true
-            )
-        );
+	public function getFrasesAction( Request $request ) {
 
-
-        $vista = $this->view($frases,
-            200);
-        return $this->handleView($vista);
-
-    }
-
-    public function postFrasesAction(Request $request)
-    {
-
-        $entity = new Frase();
-
-        $form = $this->createForm(new FraseType(), $entity);
+		$frases = $this->getDoctrine()->getRepository( "AppBundle:Frase" )->findBy(
+			array(
+				'activo' => true
+			)
+		);
 
 
-        $form->handleRequest($request);
+		$vista = $this->view( $frases,
+			200 );
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+		return $this->handleView( $vista );
 
-            $em->persist($entity);
+	}
 
-            $em->flush();
+	public function postFrasesAction( Request $request ) {
 
-            $vista = $this->view($entity,
-                200);
-        } else {
-            $vista = $this->view($entity,
-                500);
-        }
+		$entity = new Frase();
+		
+		$form = $this->createForm( FraseType::class, $entity );
+
+		$form->handleRequest( $request );
+
+		if ( $form->isValid() ) {
+			$em = $this->getDoctrine()->getManager();
+
+			$em->persist( $entity );
+
+			$em->flush();
+
+			$vista = $this->view( $entity,
+				200 );
+		} else {
+			$vista = $this->view( $entity,
+				500 );
+		}
 
 
-        return $this->handleView($vista);
+		return $this->handleView( $vista );
 
-    }
+	}
 
 
 }
