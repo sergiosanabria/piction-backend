@@ -6,6 +6,8 @@ use AppBundle\Entity\Base\BaseClass;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation\VirtualProperty;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity
@@ -34,23 +36,39 @@ class Persona extends BaseClass
      *
      * @var String $apellido
      *
-     * @ORM\Column(type="string" , length=50)
+     * @ORM\Column(type="string" , length=255, nullable=true)
      */
     protected $apellido;
 
     /**
      *
+     * @var String $fechaNacimiento
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $fechaNacimiento;
+
+    /**
+     *
      * @var String $sexo
      *
-     * @ORM\Column(type="string" , length=50)
+     * @ORM\Column(type="string" , length=50, nullable=true)
      */
     protected $sexo;
 
     /**
      *
+     * @var String $perfil
+     *
+     * @ORM\Column(type="text" , nullable=true)
+     */
+    protected $perfil;
+
+    /**
+     *
      * @var String $telefonoPrincipal
      *
-     * @ORM\Column(type="string" , length=50)
+     * @ORM\Column(type="string" , length=50, nullable=true)
      */
     protected $telefonoPrincipal;
 
@@ -63,13 +81,11 @@ class Persona extends BaseClass
     protected $telefonoSecundario;
 
     /**
-     * @Assert\NotNull(message="Debe asociar un cargo de forma obligatoria.")
-     *
-     * @var String $cargo
-     *
-     * @ORM\Column(type="string" , length=50)
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Image", cascade={"persist"})
      */
-    protected $cargo;
+    protected $image;
+
+    protected $path;
 
 
     /**
@@ -77,6 +93,51 @@ class Persona extends BaseClass
      * @ORM\JoinColumn(name="usuario_id", referencedColumnName="id")
      */
     protected $usuario;
+
+    /**
+     * @SerializedName("foto")
+     * @VirtualProperty
+     */
+    public function getPathImage()
+    {
+        if (!$this->getImage()) {
+            return '';
+        }
+        $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"], 0, strpos($_SERVER["SERVER_PROTOCOL"], '/'))) . '://';
+        $host = $protocol . $_SERVER['HTTP_HOST'];
+        $rr = '/pictograma-backend/web/uploads/images/image/';
+
+        $host = $host . $rr;
+        return $host . $this->getImage()->getImageName();
+
+    }
+
+    /**
+     * @SerializedName("nombreCompleto")
+     * @VirtualProperty
+     */
+    public function getNombreCompleto()
+    {
+        return $this->getNombre(). ' '. $this->getApellido();
+
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPath()
+    {
+        $host = $_SERVER['host'];
+        return "https://" . $host . $this->getImage()->getImageName();
+    }
+
+    /**
+     * @param mixed $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
 
 
     /**
@@ -210,29 +271,6 @@ class Persona extends BaseClass
         return $this->telefonoSecundario;
     }
 
-    /**
-     * Set cargo
-     *
-     * @param string $cargo
-     *
-     * @return Persona
-     */
-    public function setCargo($cargo)
-    {
-        $this->cargo = $cargo;
-
-        return $this;
-    }
-
-    /**
-     * Get cargo
-     *
-     * @return string
-     */
-    public function getCargo()
-    {
-        return $this->cargo;
-    }
 
     /**
      * Set usuario
@@ -257,6 +295,7 @@ class Persona extends BaseClass
     {
         return $this->usuario;
     }
+
     /**
      * Constructor
      */
@@ -265,15 +304,15 @@ class Persona extends BaseClass
         $this->equipos = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    /**
-     * Retorna el nombre completo del objeto Persona
-     *
-     * @return string
-     */
-    public function getNombreCompleto()
-    {
-        return sprintf('%s %s', $this->getNombre(), $this->getApellido());
-    }
+//    /**
+//     * Retorna el nombre completo del objeto Persona
+//     *
+//     * @return string
+//     */
+//    public function getNombreCompleto()
+//    {
+//        return sprintf('%s %s', $this->getNombre(), $this->getApellido());
+//    }
 
 
     public function __toString()
@@ -346,5 +385,77 @@ class Persona extends BaseClass
         $this->actualizadoPor = $actualizadoPor;
 
         return $this;
+    }
+
+    /**
+     * Set fechaNacimiento
+     *
+     * @param \DateTime $fechaNacimiento
+     *
+     * @return Persona
+     */
+    public function setFechaNacimiento(\DateTime $fechaNacimiento)
+    {
+        $this->fechaNacimiento = $fechaNacimiento;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaNacimiento
+     *
+     * @return \DateTime
+     */
+    public function getFechaNacimiento()
+    {
+        return $this->fechaNacimiento;
+    }
+
+    /**
+     * Set image
+     *
+     * @param \AppBundle\Entity\Image $image
+     *
+     * @return Persona
+     */
+    public function setImage(\AppBundle\Entity\Image $image = null)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Get image
+     *
+     * @return \AppBundle\Entity\Image
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * Set perfil
+     *
+     * @param string $perfil
+     *
+     * @return Persona
+     */
+    public function setPerfil($perfil)
+    {
+        $this->perfil = $perfil;
+
+        return $this;
+    }
+
+    /**
+     * Get perfil
+     *
+     * @return string
+     */
+    public function getPerfil()
+    {
+        return $this->perfil;
     }
 }

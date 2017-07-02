@@ -39,10 +39,9 @@ easy_admin:
                 fields:
                     - { property: 'nombre' }
                     - { property: 'apellido' }
-                    - { property: 'sexo', type: 'choice', type_options: {choices: {'Masculino':'M', 'Femenino':'F'}} }
+                    - { property: 'sexo', type: 'choice', type_options: {choices: {'Masculino':'m', 'Femenino':'f'}} }
                     - { property: 'telefonoPrincipal' }
                     - { property: 'telefonoSecundario' }
-                    - { property: 'cargo' }
                     - { property: 'usuario', type: 'UsuarioBundle\Form\UsuarioType', type_options: { required: true } }
                     - { property: 'activo' }
 

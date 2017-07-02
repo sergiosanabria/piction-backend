@@ -7,6 +7,9 @@ use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation\VirtualProperty;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * @ORM\Entity()
@@ -26,9 +29,10 @@ class Usuario extends BaseUser
     /**
      * @var $persona
      *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Persona", mappedBy="usuario")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Persona", mappedBy="usuario",cascade={"persist","remove"}))
      */
     protected $persona;
+
 
     public function __construct()
     {

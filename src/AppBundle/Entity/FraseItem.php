@@ -4,18 +4,25 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Base\BaseClass;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
  * FraseItem
  *
  * @ORM\Table(name="frase_item")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\FraseItemRepository")
+ * @ExclusionPolicy("all")
  */
 class FraseItem extends BaseClass
 {
     /**
      * @var int
-     *
+     * @expose()
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -32,6 +39,27 @@ class FraseItem extends BaseClass
     /**
      * @var string
      *
+     * @ORM\Column(name="pictoId", type="string", nullable=true, length=10)
+     */
+    private $pictoId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="data", type="text", nullable=true)
+     */
+    private $data;
+
+    /**
+     * @var string
+     * @expose()
      * @ORM\Column(name="type", type="string", length=40, nullable=true)
      */
     private $type;
@@ -49,6 +77,30 @@ class FraseItem extends BaseClass
      * @ORM\Column(name="path", type="string", length=255, nullable=true)
      */
     private $path;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\PictogramaCustom")
+     * @ORM\JoinColumn(name="pictograma_custom_id", referencedColumnName="id", nullable=true)
+     */
+    private $pictogramaCustom;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Frase")
+     * @ORM\JoinColumn(name="frase_id", referencedColumnName="id", nullable=true)
+     */
+    private $frase;
+
+
+    /**
+     * @SerializedName("data")
+     * @VirtualProperty
+     */
+    public function getJsonData()
+    {
+
+        return json_decode($this->data, true);
+
+    }
 
 
     /**
@@ -155,5 +207,181 @@ class FraseItem extends BaseClass
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * Set fechaCreacion
+     *
+     * @param \DateTime $fechaCreacion
+     *
+     * @return FraseItem
+     */
+    public function setFechaCreacion($fechaCreacion)
+    {
+        $this->fechaCreacion = $fechaCreacion;
+
+        return $this;
+    }
+
+    /**
+     * Set fechaActualizacion
+     *
+     * @param \DateTime $fechaActualizacion
+     *
+     * @return FraseItem
+     */
+    public function setFechaActualizacion($fechaActualizacion)
+    {
+        $this->fechaActualizacion = $fechaActualizacion;
+
+        return $this;
+    }
+
+    /**
+     * Set frase
+     *
+     * @param \AppBundle\Entity\Frase $frase
+     *
+     * @return FraseItem
+     */
+    public function setFrase(\AppBundle\Entity\Frase $frase = null)
+    {
+        $this->frase = $frase;
+
+        return $this;
+    }
+
+    /**
+     * Get frase
+     *
+     * @return \AppBundle\Entity\Frase
+     */
+    public function getFrase()
+    {
+        return $this->frase;
+    }
+
+    /**
+     * Set creadoPor
+     *
+     * @param \UsuarioBundle\Entity\Usuario $creadoPor
+     *
+     * @return FraseItem
+     */
+    public function setCreadoPor(\UsuarioBundle\Entity\Usuario $creadoPor = null)
+    {
+        $this->creadoPor = $creadoPor;
+
+        return $this;
+    }
+
+    /**
+     * Set actualizadoPor
+     *
+     * @param \UsuarioBundle\Entity\Usuario $actualizadoPor
+     *
+     * @return FraseItem
+     */
+    public function setActualizadoPor(\UsuarioBundle\Entity\Usuario $actualizadoPor = null)
+    {
+        $this->actualizadoPor = $actualizadoPor;
+
+        return $this;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return FraseItem
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set data
+     *
+     * @param string $data
+     *
+     * @return FraseItem
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * Get data
+     *
+     * @return string
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Set pictoId
+     *
+     * @param string $pictoId
+     *
+     * @return FraseItem
+     */
+    public function setPictoId($pictoId)
+    {
+        $this->pictoId = $pictoId;
+
+        return $this;
+    }
+
+    /**
+     * Get pictoId
+     *
+     * @return string
+     */
+    public function getPictoId()
+    {
+        return $this->pictoId;
+    }
+
+    /**
+     * Set pictogramaCustom
+     *
+     * @param \AppBundle\Entity\PictogramaCustom $pictogramaCustom
+     *
+     * @return FraseItem
+     */
+        public function setPictogramaCustom(\AppBundle\Entity\PictogramaCustom $pictogramaCustom = null)
+    {
+        $this->pictogramaCustom = $pictogramaCustom;
+
+        return $this;
+    }
+
+    /**
+     * Get pictogramaCustom
+     *
+     * @return \AppBundle\Entity\PictogramaCustom
+     */
+    public function getPictogramaCustom()
+    {
+        return $this->pictogramaCustom;
     }
 }

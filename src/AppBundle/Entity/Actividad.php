@@ -9,12 +9,12 @@ use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
- * Frase
+ * Actividad
  *
- * @ORM\Table(name="frase")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\FraseRepository")
+ * @ORM\Table(name="actividad")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ActividadRepository")
  */
-class Frase extends BaseClass
+class Actividad extends BaseClass
 {
     /**
      * @var int
@@ -35,27 +35,27 @@ class Frase extends BaseClass
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="text", nullable=true)
+     * @ORM\Column(name="descripcion", type="text", nullable=true)
      */
     private $description;
 
 
     /**
      * @exclude()
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\FraseItem" ,mappedBy="frase" ,cascade={"persist","remove"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\ActividadFrase" ,mappedBy="actividad" ,cascade={"persist","remove"})
      */
-    private $items;
+    private $frases;
 
     /**
-     * @SerializedName("items")
+     * @SerializedName("frases")
      * @VirtualProperty
      */
-    public function getItemsActivos()
+    public function getFrasesActivas()
     {
         $retorno = array();
-        if (count($this->items)){
-            foreach ($this->items as $item) {
-                if ($item->getActivo()) {
+        if (count($this->frases)){
+            foreach ($this->frases as $item) {
+                if ($item->getActivo() && $item->getFrase()->getActivo()) {
                     $retorno [] = $item;
                 }
             }
@@ -80,7 +80,7 @@ class Frase extends BaseClass
      *
      * @param string $name
      *
-     * @return Frase
+     * @return Actividad
      */
     public function setName($name)
     {
@@ -100,11 +100,11 @@ class Frase extends BaseClass
     }
 
     /**
-     * Set description
+     * Set descripcion
      *
      * @param string $description
      *
-     * @return Frase
+     * @return Actividad
      */
     public function setDescription($description)
     {
@@ -114,7 +114,7 @@ class Frase extends BaseClass
     }
 
     /**
-     * Get description
+     * Get descripcion
      *
      * @return string
      */
@@ -122,7 +122,6 @@ class Frase extends BaseClass
     {
         return $this->description;
     }
-
     /**
      * Constructor
      */
@@ -136,7 +135,7 @@ class Frase extends BaseClass
      *
      * @param \DateTime $fechaCreacion
      *
-     * @return Frase
+     * @return Actividad
      */
     public function setFechaCreacion($fechaCreacion)
     {
@@ -150,7 +149,7 @@ class Frase extends BaseClass
      *
      * @param \DateTime $fechaActualizacion
      *
-     * @return Frase
+     * @return Actividad
      */
     public function setFechaActualizacion($fechaActualizacion)
     {
@@ -159,13 +158,46 @@ class Frase extends BaseClass
         return $this;
     }
 
+    /**
+     * Add frase
+     *
+     * @param \AppBundle\Entity\ActividadFrase $frase
+     *
+     * @return Actividad
+     */
+    public function addFrase(\AppBundle\Entity\ActividadFrase $frase)
+    {
+        $this->frases[] = $frase;
+
+        return $this;
+    }
+
+    /**
+     * Remove frase
+     *
+     * @param \AppBundle\Entity\ActividadFrase $frase
+     */
+    public function removeFrase(\AppBundle\Entity\ActividadFrase $frase)
+    {
+        $this->frases->removeElement($frase);
+    }
+
+    /**
+     * Get frases
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFrases()
+    {
+        return $this->frases;
+    }
 
     /**
      * Set creadoPor
      *
      * @param \UsuarioBundle\Entity\Usuario $creadoPor
      *
-     * @return Frase
+     * @return Actividad
      */
     public function setCreadoPor(\UsuarioBundle\Entity\Usuario $creadoPor = null)
     {
@@ -179,46 +211,12 @@ class Frase extends BaseClass
      *
      * @param \UsuarioBundle\Entity\Usuario $actualizadoPor
      *
-     * @return Frase
+     * @return Actividad
      */
     public function setActualizadoPor(\UsuarioBundle\Entity\Usuario $actualizadoPor = null)
     {
         $this->actualizadoPor = $actualizadoPor;
 
         return $this;
-    }
-
-    /**
-     * Add item
-     *
-     * @param \AppBundle\Entity\FraseItem $item
-     *
-     * @return Frase
-     */
-    public function addItem(\AppBundle\Entity\FraseItem $item)
-    {
-        $this->items[] = $item;
-
-        return $this;
-    }
-
-    /**
-     * Remove item
-     *
-     * @param \AppBundle\Entity\FraseItem $item
-     */
-    public function removeItem(\AppBundle\Entity\FraseItem $item)
-    {
-        $this->items->removeElement($item);
-    }
-
-    /**
-     * Get items
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getItems()
-    {
-        return $this->items;
     }
 }

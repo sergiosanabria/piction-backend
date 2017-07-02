@@ -9,8 +9,7 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: es
-    app.path.lugar_image: ./uploads/images/lugar
-    app.path.lugar_personas_images: /uploads/images/lugar/personas
+    app.path.image: /uploads/images/image
 
 framework:
     #esi: ~
@@ -119,13 +118,9 @@ stof_doctrine_extensions:
 vich_uploader:
     db_driver: orm
     mappings:
-        lugar_image:
-            uri_prefix:         %app.path.lugar_image%
-            upload_destination: %kernel.root_dir%/../web/uploads/images/lugar
-            namer:              vich_uploader.namer_origname
-        lugar_personas_images:
-            uri_prefix:         %app.path.lugar_personas_images%
-            upload_destination: %kernel.root_dir%/../web/uploads/images/lugar/personas
+        image_upload:
+            uri_prefix:         %app.path.image%
+            upload_destination: %kernel.root_dir%/../web/uploads/images/image
             namer:              vich_uploader.namer_origname
 
 lexik_jwt_authentication:

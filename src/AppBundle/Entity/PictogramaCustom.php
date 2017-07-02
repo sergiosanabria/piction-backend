@@ -4,17 +4,14 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Base\BaseClass;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\VirtualProperty;
-use JMS\Serializer\Annotation\SerializedName;
-use JMS\Serializer\Annotation\Exclude;
 
 /**
- * Frase
+ * PictogramaCustom
  *
- * @ORM\Table(name="frase")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\FraseRepository")
+ * @ORM\Table(name="pictograma_custom")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\PictogramaCustomRepository")
  */
-class Frase extends BaseClass
+class PictogramaCustom extends BaseClass
 {
     /**
      * @var int
@@ -35,34 +32,34 @@ class Frase extends BaseClass
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="text", nullable=true)
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */
     private $description;
 
 
     /**
-     * @exclude()
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\FraseItem" ,mappedBy="frase" ,cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Image", cascade={"persist"})
      */
-    private $items;
+    private $image;
+
+    private $path;
 
     /**
-     * @SerializedName("items")
-     * @VirtualProperty
+     * @return mixed
      */
-    public function getItemsActivos()
+    public function getPath()
     {
-        $retorno = array();
-        if (count($this->items)){
-            foreach ($this->items as $item) {
-                if ($item->getActivo()) {
-                    $retorno [] = $item;
-                }
-            }
-        }
-
-        return $retorno;
+        return $this->path;
     }
+
+    /**
+     * @param mixed $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
+
 
 
     /**
@@ -80,7 +77,7 @@ class Frase extends BaseClass
      *
      * @param string $name
      *
-     * @return Frase
+     * @return PictogramaCustom
      */
     public function setName($name)
     {
@@ -104,7 +101,7 @@ class Frase extends BaseClass
      *
      * @param string $description
      *
-     * @return Frase
+     * @return PictogramaCustom
      */
     public function setDescription($description)
     {
@@ -124,11 +121,27 @@ class Frase extends BaseClass
     }
 
     /**
-     * Constructor
+     * Set image
+     *
+     * @param \AppBundle\Entity\Image $image
+     *
+     * @return PictogramaCustom
      */
-    public function __construct()
+    public function setImage(\AppBundle\Entity\Image $image = null)
     {
-        $this->frases = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Get image
+     *
+     * @return \AppBundle\Entity\Image
+     */
+    public function getImage()
+    {
+        return $this->image;
     }
 
     /**
@@ -136,7 +149,7 @@ class Frase extends BaseClass
      *
      * @param \DateTime $fechaCreacion
      *
-     * @return Frase
+     * @return PictogramaCustom
      */
     public function setFechaCreacion($fechaCreacion)
     {
@@ -150,7 +163,7 @@ class Frase extends BaseClass
      *
      * @param \DateTime $fechaActualizacion
      *
-     * @return Frase
+     * @return PictogramaCustom
      */
     public function setFechaActualizacion($fechaActualizacion)
     {
@@ -159,13 +172,12 @@ class Frase extends BaseClass
         return $this;
     }
 
-
     /**
      * Set creadoPor
      *
      * @param \UsuarioBundle\Entity\Usuario $creadoPor
      *
-     * @return Frase
+     * @return PictogramaCustom
      */
     public function setCreadoPor(\UsuarioBundle\Entity\Usuario $creadoPor = null)
     {
@@ -179,46 +191,12 @@ class Frase extends BaseClass
      *
      * @param \UsuarioBundle\Entity\Usuario $actualizadoPor
      *
-     * @return Frase
+     * @return PictogramaCustom
      */
     public function setActualizadoPor(\UsuarioBundle\Entity\Usuario $actualizadoPor = null)
     {
         $this->actualizadoPor = $actualizadoPor;
 
         return $this;
-    }
-
-    /**
-     * Add item
-     *
-     * @param \AppBundle\Entity\FraseItem $item
-     *
-     * @return Frase
-     */
-    public function addItem(\AppBundle\Entity\FraseItem $item)
-    {
-        $this->items[] = $item;
-
-        return $this;
-    }
-
-    /**
-     * Remove item
-     *
-     * @param \AppBundle\Entity\FraseItem $item
-     */
-    public function removeItem(\AppBundle\Entity\FraseItem $item)
-    {
-        $this->items->removeElement($item);
-    }
-
-    /**
-     * Get items
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getItems()
-    {
-        return $this->items;
     }
 }

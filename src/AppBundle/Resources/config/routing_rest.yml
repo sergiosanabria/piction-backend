@@ -3,6 +3,21 @@ frase :
   resource:     "@AppBundle/Controller/Rest/FrasesRestController.php"
   name_prefix:  api_
 
+actividad :
+  type: rest
+  resource:     "@AppBundle/Controller/Rest/ActividadesRestController.php"
+  name_prefix:  api_
+
+persona :
+  type: rest
+  resource:     "@AppBundle/Controller/Rest/PersonaRestController.php"
+  name_prefix:  api_
+
+pictograma :
+  type: rest
+  resource:     "@AppBundle/Controller/Rest/PictogramaRestController.php"
+  name_prefix:  api_
+
 usuario :
   type: rest
   resource:     "@AppBundle/Controller/Rest/UsuarioRestController.php"

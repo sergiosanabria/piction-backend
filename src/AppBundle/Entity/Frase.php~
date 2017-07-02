@@ -2,7 +2,11 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Base\BaseClass;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\VirtualProperty;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * Frase
@@ -10,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="frase")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\FraseRepository")
  */
-class Frase
+class Frase extends BaseClass
 {
     /**
      * @var int
@@ -34,6 +38,31 @@ class Frase
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
+
+
+    /**
+     * @exclude()
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\FraseItem" ,mappedBy="frase" ,cascade={"persist","remove"})
+     */
+    private $items;
+
+    /**
+     * @SerializedName("items")
+     * @VirtualProperty
+     */
+    public function getItemsActivos()
+    {
+        $retorno = array();
+        if (count($this->items)){
+            foreach ($this->items as $item) {
+                if ($item->getActivo()) {
+                    $retorno [] = $item;
+                }
+            }
+        }
+
+        return $retorno;
+    }
 
 
     /**
@@ -93,5 +122,103 @@ class Frase
     {
         return $this->description;
     }
-}
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->frases = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Set fechaCreacion
+     *
+     * @param \DateTime $fechaCreacion
+     *
+     * @return Frase
+     */
+    public function setFechaCreacion($fechaCreacion)
+    {
+        $this->fechaCreacion = $fechaCreacion;
+
+        return $this;
+    }
+
+    /**
+     * Set fechaActualizacion
+     *
+     * @param \DateTime $fechaActualizacion
+     *
+     * @return Frase
+     */
+    public function setFechaActualizacion($fechaActualizacion)
+    {
+        $this->fechaActualizacion = $fechaActualizacion;
+
+        return $this;
+    }
+
+
+    /**
+     * Set creadoPor
+     *
+     * @param \UsuarioBundle\Entity\Usuario $creadoPor
+     *
+     * @return Frase
+     */
+    public function setCreadoPor(\UsuarioBundle\Entity\Usuario $creadoPor = null)
+    {
+        $this->creadoPor = $creadoPor;
+
+        return $this;
+    }
+
+    /**
+     * Set actualizadoPor
+     *
+     * @param \UsuarioBundle\Entity\Usuario $actualizadoPor
+     *
+     * @return Frase
+     */
+    public function setActualizadoPor(\UsuarioBundle\Entity\Usuario $actualizadoPor = null)
+    {
+        $this->actualizadoPor = $actualizadoPor;
+
+        return $this;
+    }
+
+    /**
+     * Add item
+     *
+     * @param \AppBundle\Entity\FraseItem $item
+     *
+     * @return Frase
+     */
+    public function addItem(\AppBundle\Entity\FraseItem $item)
+    {
+        $this->items[] = $item;
+
+        return $this;
+    }
+
+    /**
+     * Remove item
+     *
+     * @param \AppBundle\Entity\FraseItem $item
+     */
+    public function removeItem(\AppBundle\Entity\FraseItem $item)
+    {
+        $this->items->removeElement($item);
+    }
+
+    /**
+     * Get items
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
+}
