@@ -101,7 +101,7 @@ class Persona extends BaseClass
     public function getPathImage()
     {
         if (!$this->getImage()) {
-            return '';
+            return date("YmdHis");
         }
         $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"], 0, strpos($_SERVER["SERVER_PROTOCOL"], '/'))) . '://';
         $host = $protocol . $_SERVER['HTTP_HOST'];
