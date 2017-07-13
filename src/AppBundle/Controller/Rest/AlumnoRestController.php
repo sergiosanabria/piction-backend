@@ -2,9 +2,11 @@
 
 namespace AppBundle\Controller\Rest;
 
-use AppBundle\Entity\Image;
+use AppBundle\Entity\Alumno;
+use AppBundle\Entity\Docente;
+use AppBundle\Entity\DocenteAlumno;
 use AppBundle\Entity\Persona;
-use AppBundle\Form\PersonaType;
+use AppBundle\Entity\SolicitudAmistad;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\BrowserKit\Response;
@@ -12,66 +14,52 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use UsuarioBundle\Entity\Usuario;
 
-class PersonaRestController extends FOSRestController
+class AlumnoRestController extends FOSRestController
 {
-    public function putPersonaAction(Request $request)
+    public function postAlumnoRegisterAction(Request $request)
     {
 
-        $em = $this->getDoctrine()->getManager();
+        $userManager = $this->get('fos_user.user_manager');
+        $data = $request->request->all();
 
-        $persona = $em->getRepository("AppBundle:Persona")->findOneBy(array('usuario' => $this->getUser()));
+        // Do a check for existing user with userManager->findByUsername
 
-        $fecha = new \DateTime($request->get('fechaNacimiento'));
-
-        $persona->setFechaNacimiento($fecha);
-
-        $request->request->remove('fechaNacimiento');
-
-        $form = $this->createForm(PersonaType::class, $persona, ['method' => 'put']);
-
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em->flush();
-            $vista = $this->view($this->getUser(),
-                200);
-        } else {
-            $vista = $this->view(false,
-                555);
+        $user = new Usuario();
+        $user->setUsername($data['username']);
+        if ($data['pass1'] != $data['pass2']) {
+            //todo error pass no coinciden
         }
 
 
-        return $this->handleView($vista);
-    }
+        $persona = new Alumno();
 
-    public function postPersonaImageAction(Request $request)
-    {
+        $persona->setNombre($data['nombres']);
+        $persona->setApellido($data['apellido']);
+        $persona->setFechaNacimiento(new \DateTime($data['fechaNacimiento']));
+        //        $persona->setSexo($data['sexo'] );
+        $persona->setSexo('m');
+
+        $user->setPlainPassword($data['pass1']);
+        $user->setEmail($data['email']);
+        $user->setEnabled(true);
+
+        $user->setPersona($persona);
+
+        $persona->setUsuario($user);
+
+        $docenteAlumno = new DocenteAlumno();
+
+        $docenteAlumno->setAlumno($persona);
+        $docenteAlumno->setDocente($this->getUser()->getPersona());
+
+        $userManager->updateUser($user);
 
         $em = $this->getDoctrine()->getManager();
 
-        $persona = $em->getRepository("AppBundle:Persona")->findOneBy(array('usuario' => $this->getUser()));
+        $em->persist($docenteAlumno);
+        $em->flush();
 
-        if ($persona) {
-            $imagenFile = $request->files->get('file');
-
-            if ($persona->getImage()) {
-                $image = $persona->getImage();
-            } else {
-                $image = new Image();
-            }
-
-
-            $image->setImageFile($imagenFile);
-
-
-            $persona->setImage($image);
-
-
-            $em->flush();
-        }
-
-
-        $vista = $this->view('ok',
+        $vista = $this->view($user,
             200);
 
         return $this->handleView($vista);
@@ -80,6 +68,51 @@ class PersonaRestController extends FOSRestController
     public function getCheckAction()
     {
         $vista = $this->view($this->getUser(),
+            200);
+
+        return $this->handleView($vista);
+    }
+
+
+    public function getUsuarioBuscarAmigosAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $search = $request->get('search');
+
+        if (!trim($search)){
+            $vista = $this->view([],
+                200);
+
+            return $this->handleView($vista);
+        }
+
+        /* @var Usuario $usuario */
+        $usuario = $this->getUser();
+
+        $usuarios = $em->getRepository("UsuarioBundle:Usuario")->buscarAmigos($search, $usuario);
+
+        $arraySolicitudes = array();
+
+        if (count($usuarios)) {
+            /* @var Usuario $u */
+            foreach ($usuarios as $u) {
+                $arraySolicitudesEnviadas = $em->getRepository("AppBundle:SolicitudAmistad")->getSolicitudesAmistadByUsuario($usuario, $u);
+                if ($arraySolicitudesEnviadas) {
+                    $u->setEnvio($arraySolicitudesEnviadas[0]->getId());
+                    $u->setAceptado($arraySolicitudesEnviadas[0]->getAceptado());
+                }
+                $arraySolicitudesRecibidas = $em->getRepository("AppBundle:SolicitudAmistad")->getSolicitudesAmistadByUsuario($u, $usuario);
+                if ($arraySolicitudesRecibidas) {
+                    $u->setSolicito($arraySolicitudesRecibidas[0]->getId());
+                    $u->setAceptado($arraySolicitudesRecibidas[0]->getAceptado());
+                }
+
+            }
+        }
+
+
+        $vista = $this->view($usuarios,
             200);
 
         return $this->handleView($vista);

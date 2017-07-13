@@ -13,6 +13,11 @@ persona :
   resource:     "@AppBundle/Controller/Rest/PersonaRestController.php"
   name_prefix:  api_
 
+alumno :
+  type: rest
+  resource:     "@AppBundle/Controller/Rest/AlumnoRestController.php"
+  name_prefix:  api_
+
 pictograma :
   type: rest
   resource:     "@AppBundle/Controller/Rest/PictogramaRestController.php"

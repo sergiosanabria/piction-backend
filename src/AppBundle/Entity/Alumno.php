@@ -21,6 +21,12 @@ class Alumno extends Persona
      */
     private $id;
 
+    public function isAlumno()
+    {
+
+        return true;
+    }
+
     /**
      * Get id
      *
