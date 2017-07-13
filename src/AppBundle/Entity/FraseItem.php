@@ -85,7 +85,7 @@ class FraseItem extends BaseClass
     private $pictogramaCustom;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Frase")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Frase", inversedBy="items")
      * @ORM\JoinColumn(name="frase_id", referencedColumnName="id", nullable=true)
      */
     private $frase;

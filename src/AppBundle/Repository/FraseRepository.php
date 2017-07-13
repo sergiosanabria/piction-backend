@@ -12,13 +12,25 @@ class FraseRepository extends \Doctrine\ORM\EntityRepository
 {
 
 
-    public function misFrases($user){
+    public function misFrases($user)
+    {
 
         $qb = $this->createQueryBuilder('f')
             ->andWhere("f.activo = true")
             ->andWhere("f.creadoPor = :user")
-            ->setParameter("user", $user)
-            ;
+            ->setParameter("user", $user);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function frasesAmigos($arrayUsuario)
+    {
+
+        $qb = $this->createQueryBuilder('f')
+            ->andWhere("f.activo = true")
+            ->andWhere("f.creadoPor in (:arrayUsuario)")
+            ->andWhere("f.compartir = true")
+            ->setParameter("arrayUsuario", $arrayUsuario);
 
         return $qb->getQuery()->getResult();
     }

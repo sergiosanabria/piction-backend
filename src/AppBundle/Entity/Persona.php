@@ -11,6 +11,9 @@ use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({"docente" = "Docente", "persona" = "Persona", "alumno" = "Alumno"})
  * @ORM\Table(name="persona")
  */
 class Persona extends BaseClass
@@ -22,7 +25,7 @@ class Persona extends BaseClass
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    private $id;
 
     /**
      *
@@ -30,7 +33,7 @@ class Persona extends BaseClass
      *
      * @ORM\Column(type="string" , length=150)
      */
-    protected $nombre;
+    private $nombre;
 
     /**
      *
@@ -38,7 +41,7 @@ class Persona extends BaseClass
      *
      * @ORM\Column(type="string" , length=255, nullable=true)
      */
-    protected $apellido;
+    private $apellido;
 
     /**
      *
@@ -46,7 +49,7 @@ class Persona extends BaseClass
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
-    protected $fechaNacimiento;
+    private $fechaNacimiento;
 
     /**
      *
@@ -54,7 +57,7 @@ class Persona extends BaseClass
      *
      * @ORM\Column(type="string" , length=50, nullable=true)
      */
-    protected $sexo;
+    private $sexo;
 
     /**
      *
@@ -62,7 +65,7 @@ class Persona extends BaseClass
      *
      * @ORM\Column(type="text" , nullable=true)
      */
-    protected $perfil;
+    private $perfil;
 
     /**
      *
@@ -70,7 +73,7 @@ class Persona extends BaseClass
      *
      * @ORM\Column(type="string" , length=50, nullable=true)
      */
-    protected $telefonoPrincipal;
+    private $telefonoPrincipal;
 
     /**
      *
@@ -78,21 +81,43 @@ class Persona extends BaseClass
      *
      * @ORM\Column(type="string" , length=50, nullable=true)
      */
-    protected $telefonoSecundario;
+    private $telefonoSecundario;
 
     /**
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Image", cascade={"persist"})
      */
-    protected $image;
+    private $image;
 
-    protected $path;
-
+    private $path;
 
     /**
      * @ORM\OneToOne(targetEntity="UsuarioBundle\Entity\Usuario" ,  inversedBy="persona" ,cascade={"persist","remove"})
      * @ORM\JoinColumn(name="usuario_id", referencedColumnName="id")
      */
-    protected $usuario;
+    private $usuario;
+
+
+
+    /**
+     * @SerializedName("isDocente")
+     * @VirtualProperty
+     */
+    public function isDocente()
+    {
+        return false;
+    }
+
+
+    /**
+     * @SerializedName("isAlumno")
+     * @VirtualProperty
+     */
+    public function isAlumno()
+    {
+        return false;
+    }
+
+
 
     /**
      * @SerializedName("foto")
@@ -118,7 +143,7 @@ class Persona extends BaseClass
      */
     public function getNombreCompleto()
     {
-        return $this->getNombre(). ' '. $this->getApellido();
+        return $this->getNombre() . ' ' . $this->getApellido();
 
     }
 

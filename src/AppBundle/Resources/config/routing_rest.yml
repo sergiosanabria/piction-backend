@@ -18,6 +18,11 @@ pictograma :
   resource:     "@AppBundle/Controller/Rest/PictogramaRestController.php"
   name_prefix:  api_
 
+amistad :
+  type: rest
+  resource:     "@AppBundle/Controller/Rest/AmistadRestController.php"
+  name_prefix:  api_
+
 usuario :
   type: rest
   resource:     "@AppBundle/Controller/Rest/UsuarioRestController.php"

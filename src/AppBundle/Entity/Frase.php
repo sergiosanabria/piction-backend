@@ -39,7 +39,14 @@ class Frase extends BaseClass
      */
     private $description;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="compartir", type="boolean")
+     */
+    protected $compartir = false;
 
+    
     /**
      * @exclude()
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\FraseItem" ,mappedBy="frase" ,cascade={"persist","remove"})
@@ -220,5 +227,29 @@ class Frase extends BaseClass
     public function getItems()
     {
         return $this->items;
+    }
+
+    /**
+     * Set compartir
+     *
+     * @param boolean $compartir
+     *
+     * @return Frase
+     */
+    public function setCompartir($compartir)
+    {
+        $this->compartir = $compartir;
+
+        return $this;
+    }
+
+    /**
+     * Get compartir
+     *
+     * @return boolean
+     */
+    public function getCompartir()
+    {
+        return $this->compartir;
     }
 }

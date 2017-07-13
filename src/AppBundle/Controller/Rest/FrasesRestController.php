@@ -200,6 +200,7 @@ class FrasesRestController extends FOSRestController
 
             $entity->setName($request->get('name'));
             $entity->setDescription($request->get('description'));
+            $entity->setCompartir($request->get('compartir'));
             $this->setFrasesItem($items, $entity);
 
             $em->flush();

@@ -29,7 +29,7 @@ class ActividadFrase extends BaseClass
     private $frase;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Actividad")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Actividad", inversedBy="frases")
      * @ORM\JoinColumn(name="actividad_id", referencedColumnName="id", nullable=true)
      */
     private $actividad;

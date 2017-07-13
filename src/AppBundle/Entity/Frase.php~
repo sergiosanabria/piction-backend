@@ -39,7 +39,14 @@ class Frase extends BaseClass
      */
     private $description;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="compartir", type="boolean")
+     */
+    protected $compartir = false;
 
+    
     /**
      * @exclude()
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\FraseItem" ,mappedBy="frase" ,cascade={"persist","remove"})

@@ -2,7 +2,9 @@
 
 namespace AppBundle\Controller\Rest;
 
+use AppBundle\Entity\Docente;
 use AppBundle\Entity\Persona;
+use AppBundle\Entity\SolicitudAmistad;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\BrowserKit\Response;
@@ -28,7 +30,7 @@ class UsuarioRestController extends FOSRestController
         }
 
 
-        $persona = new Persona();
+        $persona = new Docente();
 
         $persona->setNombre($data['nombres']);
         $persona->setApellido($data['apellido']);
@@ -59,4 +61,56 @@ class UsuarioRestController extends FOSRestController
 
         return $this->handleView($vista);
     }
+
+
+    public function getUsuarioBuscarAmigosAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $search = $request->get('search');
+
+        if (!trim($search)){
+            $vista = $this->view([],
+                200);
+
+            return $this->handleView($vista);
+        }
+
+        /* @var Usuario $usuario */
+        $usuario = $this->getUser();
+
+        $usuarios = $em->getRepository("UsuarioBundle:Usuario")->buscarAmigos($search, $usuario);
+
+        $arraySolicitudes = array();
+
+        if (count($usuarios)) {
+            /* @var Usuario $u */
+            foreach ($usuarios as $u) {
+                $arraySolicitudesEnviadas = $em->getRepository("AppBundle:SolicitudAmistad")->getSolicitudesAmistadByUsuario($usuario, $u);
+                if ($arraySolicitudesEnviadas) {
+                    $u->setEnvio($arraySolicitudesEnviadas[0]->getId());
+                    $u->setAceptado($arraySolicitudesEnviadas[0]->getAceptado());
+                }
+                $arraySolicitudesRecibidas = $em->getRepository("AppBundle:SolicitudAmistad")->getSolicitudesAmistadByUsuario($u, $usuario);
+                if ($arraySolicitudesRecibidas) {
+                    $u->setSolicito($arraySolicitudesRecibidas[0]->getId());
+                    $u->setAceptado($arraySolicitudesRecibidas[0]->getAceptado());
+                }
+
+            }
+        }
+
+
+        $vista = $this->view($usuarios,
+            200);
+
+        return $this->handleView($vista);
+    }
+
+
+
+
+
+
+
 }
